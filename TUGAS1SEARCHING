@@ -1,0 +1,59 @@
+import 'dart:math';
+
+int sequentialSearch(List<int> arr, int target, Map<String, int> stats) {
+  stats['comparisons'] = 0; // Inisialisasi jumlah perbandingan
+  for (int i = 0; i < arr.length; i++) {
+    stats['comparisons'] = stats['comparisons']! + 1; // Tambahkan perbandingan
+    if (arr[i] == target) {
+      return i; // Mengembalikan indeks jika elemen ditemukan
+    }
+  }
+  return -1; // Mengembalikan -1 jika elemen tidak ditemukan
+}
+
+int binarySearch(List<int> arr, int target, Map<String, int> stats) {
+  stats['comparisons'] = 0; // Inisialisasi jumlah perbandingan
+  int low = 0;
+  int high = arr.length - 1;
+
+  while (low <= high) {
+    stats['comparisons'] = stats['comparisons']! + 1; // Tambahkan perbandingan
+    int mid = (low + high) ~/ 2;
+    if (arr[mid] == target) {
+      return mid; // Mengembalikan indeks jika elemen ditemukan
+    } else if (arr[mid] < target) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return -1; // Mengembalikan -1 jika elemen tidak ditemukan
+}
+
+void main() {
+  // Membuat data acak
+  Random random = Random();
+  List<int> data = List.generate(20, (_) => random.nextInt(100) + 1); // Data acak
+  List<int> sortedData = List.from(data)..sort(); // Data untuk binary search
+  int target = sortedData[random.nextInt(sortedData.length)]; // Memilih target yang ada di data
+
+  // Sequential Search
+  Map<String, int> seqStats = {};
+  int seqIndex = sequentialSearch(data, target, seqStats);
+  print("Sequential Search:");
+  if (seqIndex != -1) {
+    print("Target $target ditemukan di indeks $seqIndex dengan ${seqStats['comparisons']} perbandingan");
+  } else {
+    print("Target $target tidak ditemukan dengan ${seqStats['comparisons']} perbandingan");
+  }
+
+  // Binary Search
+  Map<String, int> binStats = {};
+  int binIndex = binarySearch(sortedData, target, binStats);
+  print("\nBinary Search:");
+  if (binIndex != -1) {
+    print("Target $target ditemukan di indeks $binIndex dengan ${binStats['comparisons']} perbandingan");
+  } else {
+    print("Target $target tidak ditemukan dengan ${binStats['comparisons']} perbandingan");
+  }
+}
